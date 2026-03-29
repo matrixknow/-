@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tap-highlight-transparent { -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 3D Viewer Stylings */
+        .perspective-container {
+            perspective: 1000px;
+        }
+        .box-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg) rotateY(45deg);
+            transition: transform 0.1s ease-out;
+        }
+        .face {
+            position: absolute;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: #e2bfb0; /* Kraft color */
+            opacity: 0.9;
+        }
+
+        /* Flute Textures */
+        .flute-corrugation {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.1) 4px, rgba(0,0,0,0.1) 8px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#c7c6c6",
+                        "secondary-fixed-dim": "#c6c6c9",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#454749",
+                        "on-primary-fixed-variant": "#7a3000",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#ffb693",
+                        "on-primary-fixed": "#351000",
+                        "secondary-container": "#e2e2e5",
+                        "surface-dim": "#dadada",
+                        "on-surface": "#1a1c1c",
+                        "outline-variant": "#e2bfb0",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#464747",
+                        "inverse-on-surface": "#f1f1f1",
+                        "background": "#f9f9f9",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "secondary": "#5d5e61",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#ffb693",
+                        "on-tertiary-container": "#313131",
+                        "on-surface-variant": "#5a4136",
+                        "surface-tint": "#a04100",
+                        "secondary-fixed": "#e2e2e5",
+                        "tertiary-fixed": "#e3e2e2",
+                        "surface-container": "#eeeeee",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline": "#8e7164",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#572000",
+                        "tertiary-container": "#999999",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#ffdbcc",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-container": "#636467",
+                        "primary": "#FF6B00", /* Updated to Industrial Logistics Orange */
+                        "tertiary": "#5e5e5e",
+                        "primary-container": "#ff6b00",
+                        "surface": "#f9f9f9",
+                        "on-secondary-fixed": "#1a1c1e",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Work Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"}
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/20 selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="package_2">package_2</span>
+<h1 class="text-xl font-black uppercase tracking-tighter text-primary font-headline">BoxMaster Pro</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-zinc-500 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-48 px-6 max-w-4xl mx-auto space-y-12">
+<!-- Hero Section -->
+<section class="space-y-2">
+<p class="text-primary font-bold tracking-widest uppercase text-xs">Architectural Logistics</p>
+<h2 class="text-4xl md:text-5xl font-black font-headline tracking-tighter text-on-background leading-none">견적 상세 설정</h2>
+<p class="text-secondary font-medium max-w-md">정교한 설계를 통해 귀하의 브랜드에 완벽한 박스 패키징 솔루션을 구축하십시오.</p>
+</section>
+<!-- Box Type Selection -->
+<section class="space-y-6">
+<div class="flex items-end justify-between">
+<h3 class="font-headline font-bold text-xl tracking-tight">Box Type <span class="text-primary">Selection</span></h3>
+<span class="text-xs text-secondary font-medium">Step 01 / 05</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg bg-primary/5 border-2 border-primary ring-4 ring-primary/5 transition-all text-center">
+<span class="material-symbols-outlined text-3xl text-primary mb-2" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-[10px] font-bold text-primary tracking-tight font-headline">A-Type (RSC)</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 transition-all text-center">
+<span class="material-symbols-outlined text-3xl text-secondary mb-2 group-hover:text-primary transition-colors" data-icon="deployed_code">deployed_code</span>
+<span class="text-[10px] font-semibold text-secondary group-hover:text-on-surface font-headline uppercase">B-Type (Die-cut)</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 transition-all text-center">
+<span class="material-symbols-outlined text-3xl text-secondary mb-2 group-hover:text-primary transition-colors" data-icon="move_to_inbox">move_to_inbox</span>
+<span class="text-[10px] font-semibold text-secondary group-hover:text-on-surface font-headline uppercase leading-tight">T-Type (Reverse Tuck End)</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 transition-all text-center">
+<span class="material-symbols-outlined text-3xl text-secondary mb-2 group-hover:text-primary transition-colors" data-icon="mail">mail</span>
+<span class="text-[10px] font-semibold text-secondary group-hover:text-on-surface font-headline uppercase">G-Type (Pizza)</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 transition-all text-center">
+<span class="material-symbols-outlined text-3xl text-secondary mb-2 group-hover:text-primary transition-colors" data-icon="layers">layers</span>
+<span class="text-[10px] font-semibold text-secondary group-hover:text-on-surface font-headline uppercase">D-Type (Knock)</span>
+</button>
+</div>
+</section>
+<!-- Dimensions & 3D Viewer -->
+<section class="grid md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-5 space-y-4">
+<h3 class="font-headline font-bold text-xl tracking-tight">Dimensions</h3>
+<p class="text-sm text-secondary leading-relaxed">박스의 내부 치수를 밀리미터(mm) 단위로 입력하십시오. 실시간 3D 모델이 비례에 맞춰 업데이트됩니다.</p>
+<div class="relative aspect-square bg-surface-container-low rounded-xl flex items-center justify-center overflow-hidden border border-outline/10 group cursor-grab active:cursor-grabbing">
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none perspective-container">
+<div class="box-3d w-32 h-32 flex items-center justify-center">
+<div class="face w-full h-full transform translate-z-[16px] border-black/5 shadow-inner"></div>
+<div class="face w-full h-full transform translate-z-[-16px] rotate-y-180 bg-black/5"></div>
+<div class="face w-8 h-full transform -rotate-y-90 translate-x-[-16px] origin-center bg-[#c1a396]"></div>
+<div class="face w-8 h-full transform rotate-y-90 translate-x-[112px] origin-center bg-[#c1a396]"></div>
+<div class="face w-full h-8 transform rotate-x-90 translate-y-[-16px] origin-center bg-[#d4b0a1]"></div>
+<div class="face w-full h-8 transform -rotate-x-90 translate-y-[112px] origin-center bg-[#8e7164]"></div>
+</div>
+</div>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm border border-outline/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="view_in_ar">view_in_ar</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface">3D Architectural View</span>
+</div>
+<div class="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px]"></div>
+</div>
+</div>
+<div class="md:col-span-7 bg-surface-container-low p-6 rounded-xl space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Length (장)</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg p-3 font-headline text-lg focus:ring-2 focus:ring-primary/20 transition-all" placeholder="400" type="number" value="400"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Width (폭)</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg p-3 font-headline text-lg focus:ring-2 focus:ring-primary/20 transition-all" placeholder="300" type="number" value="300"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Height (고)</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg p-3 font-headline text-lg focus:ring-2 focus:ring-primary/20 transition-all" placeholder="200" type="number" value="200"/>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/10">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5" data-icon="info">info</span>
+<p class="text-[11px] font-medium text-on-surface-variant leading-relaxed">입력된 치수는 내부 기준이며, 제작 공정에 따라 ±2mm의 오차가 발생할 수 있습니다.</p>
+</div>
+</div>
+</section>
+<!-- Cardboard Flute (골두께) Selection -->
+<section class="space-y-6">
+<h3 class="font-headline font-bold text-xl tracking-tight">Cardboard <span class="text-primary">Flute</span></h3>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+<!-- A/F -->
+<label class="relative flex flex-col rounded-lg overflow-hidden bg-surface-container-lowest border-2 border-primary ring-2 ring-primary/10 cursor-pointer group transition-all">
+<input checked="" class="absolute opacity-0" name="flute" type="radio"/>
+<div class="aspect-[4/3] bg-[#f2e6d9] relative p-3">
+<div class="w-full h-1 bg-[#dcd2c4] rounded-t shadow-sm"></div>
+<div class="w-full h-8 flute-corrugation opacity-40"></div>
+<div class="w-full h-1 bg-[#dcd2c4] rounded-b shadow-sm"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] font-black opacity-30 tracking-widest">A-FLUTE</span>
+</div>
+</div>
+<div class="p-3 bg-white">
+<p class="font-black text-sm text-primary leading-tight">A골</p>
+<p class="text-[10px] font-bold text-secondary uppercase">5mm / 10kg↓</p>
+</div>
+<div class="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-xs font-bold" data-icon="check">check</span>
+</div>
+</label>
+<!-- B/F -->
+<label class="relative flex flex-col rounded-lg overflow-hidden bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 cursor-pointer group transition-all">
+<input class="absolute opacity-0" name="flute" type="radio"/>
+<div class="aspect-[4/3] bg-[#f2e6d9] relative p-3">
+<div class="w-full h-1 bg-[#dcd2c4] rounded-t shadow-sm"></div>
+<div class="w-full h-4 flute-corrugation opacity-40"></div>
+<div class="w-full h-1 bg-[#dcd2c4] rounded-b shadow-sm"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] font-black opacity-30 tracking-widest">B-FLUTE</span>
+</div>
+</div>
+<div class="p-3 bg-white">
+<p class="font-black text-sm text-on-surface leading-tight">B골</p>
+<p class="text-[10px] font-bold text-secondary uppercase">3mm / 5kg↓</p>
+</div>
+</label>
+<!-- DW(BA) -->
+<label class="relative flex flex-col rounded-lg overflow-hidden bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 cursor-pointer group transition-all">
+<input class="absolute opacity-0" name="flute" type="radio"/>
+<div class="aspect-[4/3] bg-[#f2e6d9] relative p-3 flex flex-col justify-center">
+<div class="w-full h-1 bg-[#dcd2c4] rounded-t"></div>
+<div class="w-full h-4 flute-corrugation opacity-40"></div>
+<div class="w-full h-0.5 bg-[#dcd2c4]"></div>
+<div class="w-full h-6 flute-corrugation opacity-40"></div>
+<div class="w-full h-1 bg-[#dcd2c4] rounded-b"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] font-black opacity-30 tracking-widest">BA-DW</span>
+</div>
+</div>
+<div class="p-3 bg-white">
+<p class="font-black text-sm text-on-surface leading-tight">DW(BA)골</p>
+<p class="text-[10px] font-bold text-secondary uppercase">8mm / 20kg↓</p>
+</div>
+</label>
+<!-- DW(BB) -->
+<label class="relative flex flex-col rounded-lg overflow-hidden bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 cursor-pointer group transition-all">
+<input class="absolute opacity-0" name="flute" type="radio"/>
+<div class="aspect-[4/3] bg-[#f2e6d9] relative p-3 flex flex-col justify-center">
+<div class="w-full h-1 bg-[#dcd2c4] rounded-t"></div>
+<div class="w-full h-4 flute-corrugation opacity-40"></div>
+<div class="w-full h-0.5 bg-[#dcd2c4]"></div>
+<div class="w-full h-4 flute-corrugation opacity-40"></div>
+<div class="w-full h-1 bg-[#dcd2c4] rounded-b"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] font-black opacity-30 tracking-widest">BB-DW</span>
+</div>
+</div>
+<div class="p-3 bg-white">
+<p class="font-black text-sm text-on-surface leading-tight">DW(BB)골</p>
+<p class="text-[10px] font-bold text-secondary uppercase">6mm</p>
+</div>
+</label>
+<!-- E/F -->
+<label class="relative flex flex-col rounded-lg overflow-hidden bg-surface-container-lowest border-2 border-transparent hover:border-outline/20 cursor-pointer group transition-all">
+<input class="absolute opacity-0" name="flute" type="radio"/>
+<div class="aspect-[4/3] bg-[#f2e6d9] relative p-3">
+<div class="w-full h-1 bg-[#dcd2c4] rounded-t shadow-sm"></div>
+<div class="w-full h-2 flute-corrugation opacity-40"></div>
+<div class="w-full h-1 bg-[#dcd2c4] rounded-b shadow-sm"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] font-black opacity-30 tracking-widest">E-FLUTE</span>
+</div>
+</div>
+<div class="p-3 bg-white">
+<p class="font-black text-sm text-on-surface leading-tight">E골</p>
+<p class="text-[10px] font-bold text-secondary uppercase">1.5mm</p>
+</div>
+</label>
+</div>
+</section>
+<!-- Material Selection (Updated Section) -->
+<section class="space-y-6">
+<h3 class="font-headline font-bold text-xl tracking-tight">Material <span class="text-primary">Selection</span></h3>
+<!-- Material Type Selection Buttons -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<button class="flex items-center gap-2 p-3 rounded-lg border border-zinc-200 bg-white hover:border-zinc-300 transition-all text-left">
+<div class="w-5 h-5 rounded-full border-2 border-zinc-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[12px] text-transparent" data-icon="check">check</span>
+</div>
+<span class="text-[11px] font-bold text-zinc-600">경제형 (SK-3S-K)</span>
+</button>
+<button class="flex items-center gap-2 p-3 rounded-lg border border-zinc-200 bg-white hover:border-zinc-300 transition-all text-left">
+<div class="w-5 h-5 rounded-full border-2 border-zinc-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[12px] text-transparent" data-icon="check">check</span>
+</div>
+<span class="text-[11px] font-bold text-zinc-600">보급형 (SK-S.S.K.K)</span>
+</button>
+<button class="flex items-center gap-2 p-3 rounded-lg border border-zinc-200 bg-white hover:border-zinc-300 transition-all text-left">
+<div class="w-5 h-5 rounded-full border-2 border-zinc-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[12px] text-transparent" data-icon="check">check</span>
+</div>
+<span class="text-[11px] font-bold text-zinc-600">고급형 (SK-4K)</span>
+</button>
+<button class="flex items-center gap-2 p-3 rounded-lg border border-primary bg-primary shadow-sm shadow-primary/20 transition-all text-left">
+<div class="w-5 h-5 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[12px] text-primary font-bold" data-icon="check">check</span>
+</div>
+<span class="text-[11px] font-bold text-white">직접선택</span>
+</button>
+</div>
+<!-- Direct Selection Expanded View -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 p-4 bg-surface-container-low rounded-xl">
+<!-- Surface Paper -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">표면지</label>
+<div class="relative">
+<select class="w-full appearance-none bg-white border border-zinc-200 rounded-lg py-2.5 px-3 font-headline text-sm focus:ring-2 focus:ring-primary/20 shadow-sm">
+<option>표면지 선택</option>
+<option>S120</option>
+<option>B150</option>
+<option>K180</option>
+<option>K250</option>
+<option>S150</option>
+<option>S180</option>
+<option>S200</option>
+<option>K120</option>
+<option>K150</option>
+<option>K210</option>
+<option>KLB175</option>
+<option>KLB200</option>
+<option>KLB225</option>
+<option>KLB250</option>
+<option>KLB280</option>
+<option>KLB300</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-lg" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Fluting 1 -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">골심지</label>
+<div class="relative">
+<select class="w-full appearance-none bg-white border border-zinc-200 rounded-lg py-2.5 px-3 font-headline text-sm focus:ring-2 focus:ring-primary/20 shadow-sm">
+<option>S120</option>
+<option>B150</option>
+<option>K180</option>
+<option>K250</option>
+<option>S150</option>
+<option>S180</option>
+<option>S200</option>
+<option>K120</option>
+<option>K150</option>
+<option>K210</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-lg" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Center Paper -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">중심지</label>
+<div class="relative">
+<select class="w-full appearance-none bg-white border border-zinc-200 rounded-lg py-2.5 px-3 font-headline text-sm focus:ring-2 focus:ring-primary/20 shadow-sm">
+<option>S120</option>
+<option>B150</option>
+<option>K180</option>
+<option>K250</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-lg" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Fluting 2 -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">골심지</label>
+<div class="relative">
+<select class="w-full appearance-none bg-white border border-zinc-200 rounded-lg py-2.5 px-3 font-headline text-sm focus:ring-2 focus:ring-primary/20 shadow-sm">
+<option>S120</option>
+<option>B150</option>
+<option>K180</option>
+<option>K250</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-lg" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Inner Paper -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">이면지</label>
+<div class="relative">
+<select class="w-full appearance-none bg-white border border-zinc-200 rounded-lg py-2.5 px-3 font-headline text-sm focus:ring-2 focus:ring-primary/20 shadow-sm">
+<option>K180</option>
+<option>S120</option>
+<option>B150</option>
+<option>K250</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-lg" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quantity & Printing -->
+<section class="grid md:grid-cols-2 gap-12 pt-8">
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline font-bold text-xl tracking-tight">Quantity</h3>
+<span class="text-[10px] font-black text-primary px-2 py-1 bg-primary/10 rounded uppercase">Min: 500 Sheets</span>
+</div>
+<div class="flex items-center bg-surface-container-lowest rounded-xl p-2 shadow-sm border border-outline/5">
+<button class="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-secondary active:scale-90 transition-all">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="flex-1 border-none bg-transparent text-center font-black font-headline text-3xl focus:ring-0" type="number" value="1000"/>
+<button class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary text-white active:scale-90 transition-all shadow-md">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-6">
+<h3 class="font-headline font-bold text-xl tracking-tight">Printing Options</h3>
+<div class="grid grid-cols-1 gap-3">
+<label class="flex items-center justify-between p-4 rounded-lg bg-surface-container-lowest border border-outline/10 cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="block">block</span>
+<span class="text-sm font-bold text-on-surface">무인쇄 (No Print)</span>
+</div>
+<input checked="" class="w-5 h-5 text-primary border-outline/30 focus:ring-primary/20 bg-white" name="printing" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-4 rounded-lg bg-surface-container-lowest border border-outline/10 cursor-pointer hover:bg-surface-bright transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="palette">palette</span>
+<span class="text-sm font-bold text-on-surface">인쇄 (Print)</span>
+</div>
+<input class="w-5 h-5 text-primary border-outline/30 focus:ring-primary/20 bg-white" name="printing" type="radio"/>
+</label>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Action Bar -->
+<footer class="fixed bottom-24 mx-4 w-[calc(100%-2rem)] max-w-4xl left-1/2 -translate-x-1/2 rounded-xl bg-zinc-900 text-white shadow-2xl shadow-black/20 z-40 flex items-center justify-between px-6 py-4">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-widest text-white/50">Estimated Unit Price: ₩840</span>
+<span class="text-xl font-black font-headline">Total: ₩840,000 <span class="text-sm font-medium text-white/60 ml-1">(VAT 별도)</span></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="border-2 border-white/20 hover:border-white/40 hover:bg-white/5 text-white rounded-lg px-5 py-3 flex items-center gap-2 active:translate-y-0.5 transition-all font-bold text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+        미리보기
+    </button>
+<button class="bg-primary hover:bg-primary/90 rounded-lg px-5 py-3 flex items-center gap-2 active:translate-y-0.5 transition-all text-white font-bold text-sm shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span>
+        Generate &amp; Share PDF
+    </button>
+</div>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-white border-t border-zinc-100 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50">
+<a class="flex flex-col items-center justify-center text-primary scale-110 transition-transform tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined" data-icon="calculate" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="text-[11px] font-semibold uppercase tracking-wider">견적</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 hover:text-primary transition-colors tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-[11px] font-semibold uppercase tracking-wider">이력</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 hover:text-primary transition-colors tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[11px] font-semibold uppercase tracking-wider">관리</span>
+</a>
+</nav>
+</body></html>
